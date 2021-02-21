@@ -1,22 +1,6 @@
-from casilla import casilla
+from casilla import Casilla
 from tkinter import *
-
-dimx=25
-dimy=25
-
-def reset_tablero(arg):
-    cas1 = casilla("bomba", 1, 1)
-    print(cas1)
-    print(cas1.isBomb())
-
-    cas2 = casilla("vacio", 3, 3)
-    print(cas2)
-    print(cas2.isBomb())
-
-    cas3 = casilla("numero", 0, 1)
-    print(cas3)
-    print(cas3.isBomb())
-
+from emoji import *
 
 def open_ranking():
     ranking = Toplevel(root)
@@ -49,34 +33,44 @@ def open_about():
     about.maxsize(width=200, height=200)
     about.minsize(width=200, height=200)
 
-    Label(about, text="Aqui iria un about").pack()
+    Label(about, text="Size: {}".format(root.geometry())).pack()
 
     about.mainloop()
 
 
-def crea_tablero(dimx, dimy, bombas):
+# def crea_tablero(dimx, dimy, bombas):
+#     frm = Frame()
+#
+#     for j in range(dimy):
+#         for i in range(dimx):
+#             # sq = Casilla(frm,0)
+#             # sq.frm.pack()
+#             pass
+#
+#     # frm.pack()
+
+def muestraHijos(self):
+    print(self)
 
 
+def rellena_tablero(tablero):
+    dimx = 20
+    dimy = 20
 
-    frm = Frame()
+    btn = Button()
 
-    for j in range(dimy):
-        for i in range(dimx):
-            frm = Frame(root, width=25, height=25)
-            btn = Button(frm)
+    for i in range(dimx):
+        for j in range(dimy):
 
-            frm.grid_propagate(False)
-            frm.columnconfigure(0, weight=1)
-            frm.rowconfigure(0, weight=1)
+            btn = Button(tablero, text="", command=muestraHijos)
+            btn.pack(side=LEFT)
 
-            frm.grid(row=j, column=i)
-            btn.grid(sticky="wens")
 
 
 if __name__ == '__main__':
     # Crea una ventana root de 400x400, bloquea el tamaño y añade un icono.
     root = Tk()
-    root.geometry('500x25')
+    root.geometry('500x520')
     root.title("Buscaminas!!")
     root.iconbitmap("img/gradiente.ico")
 
@@ -86,7 +80,7 @@ if __name__ == '__main__':
     # Crea la opcion partida para el menubar y añade el comando exit y reset
     partida = Menu(menubar, tearoff=0)
     menubar.add_cascade(label="Partida", menu=partida)
-    partida.add_command(label="Nueva Partida", command=reset_tablero)
+    partida.add_command(label="Nueva Partida")
     partida.add_command(label="Exit", command=root.destroy)
 
     # Crea la opcion datos para el menubar y añade el comando ranking
@@ -100,9 +94,23 @@ if __name__ == '__main__':
     help.add_command(label="Version", command=open_version)
     help.add_command(label="About", command=open_about)
 
-    # Crea tablero
-    crea_tablero(20, 20, 7)
+    # Crea dos frames, uno para el estado de la partida y otro para el tablero
+    estado = Frame(root, bg="grey", height=25)
+    estadoBtn = Button(estado, text=emojize(":alien:"))
+
+    tablero = Frame(root)
+
+
+    # Packing de los frames
+    estado.pack(fill=X)
+    estadoBtn.pack()
+    tablero.pack(expand=True, fill=BOTH)
+    tablero.config(bg="black")
+
+    rellena_tablero(tablero)
 
     root.config(menu=menubar)
-    root.bind('<Return>', reset_tablero)
+
+
+
     root.mainloop()
